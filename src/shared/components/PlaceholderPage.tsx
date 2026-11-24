@@ -1,12 +1,15 @@
+import PageHeader from "./PageHeader";
+
 interface PlaceholderPageProps {
 	title: string;
 }
 
 export default function PlaceholderPage({ title }: PlaceholderPageProps) {
 	return (
-		<div>
-			<h2>{title}</h2>
-			<p>This page is under construction.</p>
-		</div>
+		<PageHeader
+			title={title}
+			subtitle="This page is under construction."
+			actions={<button>Add</button>}
+		/>
 	);
 }
