@@ -1,0 +1,32 @@
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.tabs__tab {
+  flex: 0 0 auto;
+  padding: 0.625rem 0.875rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #4b5563;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tabs__tab:hover {
+  color: #111827;
+}
+
+.tabs__tab--selected {
+  border-bottom-color: #2563eb;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.tabs__tab:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
