@@ -2,7 +2,7 @@
   display: flex;
   gap: 0.25rem;
   overflow-x: auto;
-  border-bottom: 1px solid #d1d5db;
+  border-bottom: 1px solid var(--control-border);
 }
 
 .tabs__tab {
@@ -11,22 +11,22 @@
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: #4b5563;
+  color: var(--text-secondary);
   font: inherit;
   cursor: pointer;
 }
 
 .tabs__tab:hover {
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .tabs__tab--selected {
-  border-bottom-color: #2563eb;
-  color: #1d4ed8;
+  border-bottom-color: var(--accent-color);
+  color: var(--accent-color);
   font-weight: 600;
 }
 
 .tabs__tab:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--accent-color);
   outline-offset: -2px;
 }

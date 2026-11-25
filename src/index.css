@@ -1,0 +1,95 @@
+:root {
+  font-family: Arial, sans-serif;
+  color: #1f2937;
+  background: #f9fafb;
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  --page-background: #f9fafb;
+  --surface-background: #ffffff;
+  --surface-muted: #f3f4f6;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+  --control-border: #d1d5db;
+  --accent-color: #2563eb;
+  --badge-active-background: #dcfce7;
+  --badge-active-text: #166534;
+  --badge-inactive-background: #fee2e2;
+  --badge-inactive-text: #991b1b;
+  --badge-warning-background: #fef3c7;
+  --badge-warning-text: #92400e;
+  --badge-neutral-background: #e5e7eb;
+  --badge-neutral-text: #374151;
+}
+
+:root[data-theme="dark"] {
+  color: #e5e7eb;
+  background: #111827;
+  color-scheme: dark;
+
+  --page-background: #111827;
+  --surface-background: #1f2937;
+  --surface-muted: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --control-border: #4b5563;
+  --accent-color: #60a5fa;
+  --badge-active-background: #14532d;
+  --badge-active-text: #bbf7d0;
+  --badge-inactive-background: #7f1d1d;
+  --badge-inactive-text: #fecaca;
+  --badge-warning-background: #78350f;
+  --badge-warning-text: #fde68a;
+  --badge-neutral-background: #374151;
+  --badge-neutral-text: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--page-background);
+  color: var(--text-primary);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--surface-background);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+.theme-toggle {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--control-border);
+  border-radius: 0.375rem;
+  background: var(--surface-background);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
