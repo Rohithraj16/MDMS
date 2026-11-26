@@ -1,0 +1,19 @@
+@MDMS.Api_HostAddress = http://localhost:5247
+
+GET {{MDMS.Api_HostAddress}}/api/zones
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/customers?zoneId=1
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/meters
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/meters?zoneId=1&status=Active
+Accept: application/json
