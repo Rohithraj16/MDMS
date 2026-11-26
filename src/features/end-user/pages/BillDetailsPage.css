@@ -1,0 +1,28 @@
+.bill-details-page { max-width: 1100px; margin: 0 auto; }
+.bill-details-state { padding: 24px 0; color: var(--text-secondary); }
+.bill-details-error { padding: 14px; background: #fef2f2; color: #991b1b; border-radius: 8px; }
+.bill-details-demo-note { padding: 10px 12px; border-radius: 8px; background: var(--surface-muted); color: var(--text-secondary); font-size: .85rem; }
+.bill-print-button { padding: 9px 16px; border: 0; border-radius: 8px; background: var(--accent-color); color: white; font: inherit; cursor: pointer; }
+.bill-summary { display: flex; flex-wrap: wrap; gap: 12px; padding: 18px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--surface-background); }
+.bill-summary > div { display: flex; flex: 1 1 150px; flex-direction: column; align-items: flex-start; gap: 7px; }
+.bill-summary span { color: var(--text-secondary); font-size: .82rem; }
+.bill-summary strong { font-size: 1rem; }
+.bill-days-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 24px 0 12px; }
+.bill-days-heading h2 { margin: 0; font-size: 1.1rem; }
+.bill-days-heading span { color: var(--text-secondary); font-size: .85rem; }
+.bill-days-table-wrap { overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; }
+.bill-days-table { width: 100%; border-collapse: collapse; background: var(--surface-background); }
+.bill-days-table th, .bill-days-table td { padding: 11px 14px; border-bottom: 1px solid var(--border-color); text-align: left; white-space: nowrap; }
+.bill-days-table th { background: var(--surface-muted); font-size: .86rem; }
+.bill-days-table tbody tr:last-child td { border-bottom: 0; }
+.bill-detail-footer { margin-top: 20px; }
+@media print {
+	@page { margin: 14mm; }
+	body { background: white !important; color: black !important; }
+	.sidebar, .app-header, .app-layout__overlay, .no-print, .bill-detail-footer { display: none !important; }
+	.app-layout__content { padding: 0 !important; }
+	.bill-details-page { max-width: none; }
+	.bill-summary, .bill-days-table-wrap, .bill-days-table { border-color: #aaa; background: white; }
+	.bill-days-table th { background: #eee; }
+	.bill-days-table th, .bill-days-table td { padding: 7px 9px; }
+}
