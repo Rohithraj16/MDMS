@@ -1,0 +1,122 @@
+.auth-page {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+}
+
+.auth-card {
+	width: 100%;
+	max-width: 400px;
+	padding: 28px;
+	border: 1px solid var(--border, #e5e7eb);
+	border-radius: 12px;
+	background: var(--surface, #fff);
+}
+
+.auth-card h1 {
+	margin: 0 0 4px;
+	font-size: 1.5rem;
+}
+.auth-card__subtitle {
+	margin: 0 0 20px;
+	color: var(--text-secondary, #6b7280);
+	font-size: 0.9rem;
+}
+
+.auth-field {
+	margin-bottom: 16px;
+}
+.auth-field label {
+	display: block;
+	margin-bottom: 4px;
+	font-size: 0.9rem;
+	font-weight: 500;
+}
+.auth-field input[type="email"],
+.auth-field input[type="text"],
+.auth-field input[type="password"] {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 10px 12px;
+	border: 1px solid var(--border, #d1d5db);
+	border-radius: 8px;
+	font-size: 1rem;
+}
+.auth-field input[aria-invalid="true"] {
+	border-color: #dc2626;
+}
+
+.auth-password {
+	position: relative;
+}
+.auth-password input {
+	padding-right: 64px;
+}
+.auth-password__toggle {
+	position: absolute;
+	top: 50%;
+	right: 8px;
+	transform: translateY(-50%);
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-size: 0.85rem;
+	color: var(--primary, #2563eb);
+}
+
+.auth-error {
+	margin: 4px 0 0;
+	color: #dc2626;
+	font-size: 0.85rem;
+}
+.auth-success {
+	padding: 12px;
+	margin-bottom: 16px;
+	border-radius: 8px;
+	background: #ecfdf5;
+	color: #065f46;
+	font-size: 0.9rem;
+}
+
+.auth-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 16px;
+	font-size: 0.9rem;
+}
+.auth-row label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.auth-submit {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 8px;
+	background: var(--primary, #2563eb);
+	color: #fff;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.auth-links {
+	margin-top: 16px;
+	text-align: center;
+	font-size: 0.9rem;
+}
+
+.auth-temp {
+	margin-top: 20px;
+	padding-top: 12px;
+	border-top: 1px dashed var(--border, #d1d5db);
+	font-size: 0.85rem;
+	text-align: center;
+}
+.auth-temp a {
+	margin: 0 6px;
+}
