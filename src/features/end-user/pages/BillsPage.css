@@ -1,0 +1,9 @@
+.bills-page { display: grid; gap: 16px; }
+.bills-page .page-header { margin-bottom: 0; }
+.bills-note { margin: 0; color: var(--text-secondary); font-size: .9rem; }
+.bills-demo-note { margin: 0; padding: 10px 12px; border-radius: 8px; background: var(--surface-muted); color: var(--text-secondary); font-size: .85rem; }
+.bill-action { color: var(--accent-color); font-weight: 600; text-decoration: none; }
+.bill-action:hover { text-decoration: underline; }
+.bills-state { padding: 24px 0; color: var(--text-secondary); }
+.bills-error { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 16px; color: #991b1b; background: #fef2f2; border-radius: 8px; }
+.bills-error button { padding: 6px 10px; border: 1px solid currentColor; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
