@@ -1,0 +1,16 @@
+.zone-meters__add-button {
+	min-height: 40px;
+	padding: 9px 14px;
+	border: 0;
+	border-radius: 8px;
+	background: #2563eb;
+	color: #ffffff;
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.zone-meters__add-button:hover {
+	background: #1d4ed8;
+}

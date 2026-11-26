@@ -36,4 +36,34 @@ public sealed class CustomersController(MDMSDbContext dbContext) : ControllerBas
 
         return Ok(response);
     }
+
+    [HttpGet("{customerId:int}")]
+    public async Task<ActionResult<CustomerDetailsResponse>> GetCustomer(
+        int customerId,
+        CancellationToken cancellationToken
+    )
+    {
+        var response = await dbContext.Customers
+            .AsNoTracking()
+            .Where(customer => customer.Id == customerId)
+            .Select(customer => new CustomerDetailsResponse(
+                customer.Id,
+                customer.AccountNumber,
+                customer.FullName,
+                customer.ZoneId,
+                customer.Zone.Name,
+                customer.Meters
+                    .OrderBy(meter => meter.MeterNumber)
+                    .Select(meter => new CustomerMeterResponse(
+                        meter.MeterNumber,
+                        meter.Status,
+                        meter.ReadingKwh,
+                        meter.LastUpdated
+                    ))
+                    .ToList()
+            ))
+            .SingleOrDefaultAsync(cancellationToken);
+
+        return response is null ? NotFound() : Ok(response);
+    }
 }

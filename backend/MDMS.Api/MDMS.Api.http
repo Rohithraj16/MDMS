@@ -10,7 +10,17 @@ Accept: application/json
 
 ###
 
+GET {{MDMS.Api_HostAddress}}/api/customers/1
+Accept: application/json
+
+###
+
 GET {{MDMS.Api_HostAddress}}/api/meters
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/meters/MTR-1001
 Accept: application/json
 
 ###

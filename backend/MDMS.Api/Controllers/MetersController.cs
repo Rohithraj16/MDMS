@@ -43,6 +43,30 @@ public sealed class MetersController(MDMSDbContext dbContext) : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("{meterNumber}")]
+    public async Task<ActionResult<MeterDetailsResponse>> GetMeter(
+        string meterNumber,
+        CancellationToken cancellationToken
+    )
+    {
+        var response = await dbContext.Meters
+            .AsNoTracking()
+            .Where(meter => meter.MeterNumber == meterNumber)
+            .Select(meter => new MeterDetailsResponse(
+                meter.MeterNumber,
+                meter.Customer.Zone.Name,
+                meter.Status,
+                meter.ReadingKwh,
+                meter.LastUpdated,
+                meter.Customer.Id,
+                meter.Customer.AccountNumber,
+                meter.Customer.FullName
+            ))
+            .SingleOrDefaultAsync(cancellationToken);
+
+        return response is null ? NotFound() : Ok(response);
+    }
+
     [HttpPost]
     public async Task<ActionResult<MeterResponse>> CreateMeter(
         CreateMeterRequest request,
