@@ -1109,6 +1109,79 @@ namespace MDMS.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MDMS.Api.Models.ZoneSettings", b =>
+                {
+                    b.Property<int>("ZoneId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("EmailNotificationsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("HighConsumptionThresholdKwh")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<decimal>("HighVoltageThresholdVolts")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<bool>("InAppNotificationsEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("LowVoltageThresholdVolts")
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
+
+                    b.Property<bool>("SmsNotificationsEnabled")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ZoneId");
+
+                    b.ToTable("ZoneSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            ZoneId = 1,
+                            EmailNotificationsEnabled = true,
+                            HighConsumptionThresholdKwh = 15m,
+                            HighVoltageThresholdVolts = 250m,
+                            InAppNotificationsEnabled = true,
+                            LowVoltageThresholdVolts = 210m,
+                            SmsNotificationsEnabled = true
+                        },
+                        new
+                        {
+                            ZoneId = 2,
+                            EmailNotificationsEnabled = true,
+                            HighConsumptionThresholdKwh = 15m,
+                            HighVoltageThresholdVolts = 250m,
+                            InAppNotificationsEnabled = true,
+                            LowVoltageThresholdVolts = 210m,
+                            SmsNotificationsEnabled = true
+                        },
+                        new
+                        {
+                            ZoneId = 3,
+                            EmailNotificationsEnabled = true,
+                            HighConsumptionThresholdKwh = 15m,
+                            HighVoltageThresholdVolts = 250m,
+                            InAppNotificationsEnabled = true,
+                            LowVoltageThresholdVolts = 210m,
+                            SmsNotificationsEnabled = true
+                        },
+                        new
+                        {
+                            ZoneId = 4,
+                            EmailNotificationsEnabled = true,
+                            HighConsumptionThresholdKwh = 15m,
+                            HighVoltageThresholdVolts = 250m,
+                            InAppNotificationsEnabled = true,
+                            LowVoltageThresholdVolts = 210m,
+                            SmsNotificationsEnabled = true
+                        });
+                });
+
             modelBuilder.Entity("MDMS.Api.Models.Alert", b =>
                 {
                     b.HasOne("MDMS.Api.Models.Meter", "Meter")
@@ -1151,6 +1224,15 @@ namespace MDMS.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Meter");
+                });
+
+            modelBuilder.Entity("MDMS.Api.Models.ZoneSettings", b =>
+                {
+                    b.HasOne("MDMS.Api.Models.Zone", null)
+                        .WithOne()
+                        .HasForeignKey("MDMS.Api.Models.ZoneSettings", "ZoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MDMS.Api.Models.Customer", b =>
