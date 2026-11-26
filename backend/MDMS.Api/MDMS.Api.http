@@ -17,3 +17,13 @@ Accept: application/json
 
 GET {{MDMS.Api_HostAddress}}/api/meters?zoneId=1&status=Active
 Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/dashboard?period=weekly
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/dashboard?period=monthly
+Accept: application/json
