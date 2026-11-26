@@ -24,10 +24,21 @@ The API uses ASP.NET Core 10, Entity Framework Core, and SQL Server.
    ```
 5. Open Swagger UI at `http://localhost:5247/swagger`.
 
-The initial migration seeds four zones, twelve customers per zone, and one meter per customer.
+The migrations seed four zones, twelve customers per zone, one meter per customer, and sample pending/resolved alerts. In Development, the API seeds 30 days of meter-reading history on startup if the reading-history table is empty.
 
-## Read endpoints
+## Endpoints
 
 - `GET /api/zones`
 - `GET /api/customers` (optional `zoneId` query parameter)
 - `GET /api/meters` (optional `zoneId` and `status` query parameters)
+- `GET /api/zones/{zoneId}/dashboard?period=weekly|monthly`
+- `POST /api/meters` to add an active meter for an existing customer:
+
+  ```json
+  {
+    "meterNumber": "MTR-2001",
+    "customerId": 1
+  }
+  ```
+
+The dashboard response includes active meter count, average daily usage per meter, pending alert count, and period consumption. The Zone Dashboard can also export the selected data as a CSV report.

@@ -39,6 +39,11 @@ app.UseCors("ReactFrontend");
 app.UseAuthorization();
 app.MapControllers();
 
+if (app.Environment.IsDevelopment())
+{
+    await MeterReadingSeeder.SeedAsync(app.Services);
+}
+
 app.Run();
 
 public partial class Program { }

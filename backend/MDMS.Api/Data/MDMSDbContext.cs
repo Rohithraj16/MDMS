@@ -9,6 +9,8 @@ public sealed class MDMSDbContext(DbContextOptions<MDMSDbContext> options)
     public DbSet<Zone> Zones => Set<Zone>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Meter> Meters => Set<Meter>();
+    public DbSet<Alert> Alerts => Set<Alert>();
+    public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,6 +48,33 @@ public sealed class MDMSDbContext(DbContextOptions<MDMSDbContext> options)
                 .HasForeignKey(meter => meter.CustomerId)
                 .OnDelete(DeleteBehavior.Restrict);
             entity.HasData(SeedData.Meters);
+        });
+
+        modelBuilder.Entity<Alert>(entity =>
+        {
+            entity.HasKey(alert => alert.Id);
+            entity.Property(alert => alert.AlertNumber).HasMaxLength(24).IsRequired();
+            entity.Property(alert => alert.Title).HasMaxLength(160).IsRequired();
+            entity.Property(alert => alert.Severity).HasMaxLength(24).IsRequired();
+            entity.Property(alert => alert.Status).HasMaxLength(24).IsRequired();
+            entity.HasIndex(alert => alert.AlertNumber).IsUnique();
+            entity.HasIndex(alert => new { alert.Status, alert.MeterId });
+            entity.HasOne(alert => alert.Meter)
+                .WithMany(meter => meter.Alerts)
+                .HasForeignKey(alert => alert.MeterId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasData(SeedData.Alerts);
+        });
+
+        modelBuilder.Entity<MeterReading>(entity =>
+        {
+            entity.HasKey(reading => reading.Id);
+            entity.Property(reading => reading.ReadingKwh).HasPrecision(12, 2);
+            entity.HasIndex(reading => new { reading.MeterId, reading.ReadingDate }).IsUnique();
+            entity.HasOne(reading => reading.Meter)
+                .WithMany(meter => meter.Readings)
+                .HasForeignKey(reading => reading.MeterId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         base.OnModelCreating(modelBuilder);

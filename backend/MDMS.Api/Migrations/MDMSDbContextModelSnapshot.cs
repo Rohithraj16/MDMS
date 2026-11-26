@@ -22,6 +22,174 @@ namespace MDMS.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MDMS.Api.Models.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AlertNumber")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<DateOnly>("CreatedDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("MeterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Severity")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("nvarchar(160)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlertNumber")
+                        .IsUnique();
+
+                    b.HasIndex("MeterId");
+
+                    b.HasIndex("Status", "MeterId");
+
+                    b.ToTable("Alerts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AlertNumber = "ALT-1001",
+                            CreatedDate = new DateOnly(2026, 11, 25),
+                            MeterId = 1,
+                            Severity = "High",
+                            Status = "Pending",
+                            Title = "High consumption detected"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AlertNumber = "ALT-1002",
+                            CreatedDate = new DateOnly(2026, 11, 24),
+                            MeterId = 2,
+                            Severity = "Critical",
+                            Status = "Pending",
+                            Title = "Meter communication loss"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AlertNumber = "ALT-1003",
+                            CreatedDate = new DateOnly(2026, 11, 23),
+                            MeterId = 3,
+                            Severity = "Medium",
+                            Status = "Resolved",
+                            Title = "Voltage fluctuation detected"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AlertNumber = "ALT-1004",
+                            CreatedDate = new DateOnly(2026, 11, 25),
+                            MeterId = 13,
+                            Severity = "High",
+                            Status = "Pending",
+                            Title = "High consumption detected"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AlertNumber = "ALT-1005",
+                            CreatedDate = new DateOnly(2026, 11, 24),
+                            MeterId = 14,
+                            Severity = "Critical",
+                            Status = "Pending",
+                            Title = "Meter communication loss"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AlertNumber = "ALT-1006",
+                            CreatedDate = new DateOnly(2026, 11, 23),
+                            MeterId = 15,
+                            Severity = "Medium",
+                            Status = "Resolved",
+                            Title = "Voltage fluctuation detected"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AlertNumber = "ALT-1007",
+                            CreatedDate = new DateOnly(2026, 11, 25),
+                            MeterId = 25,
+                            Severity = "High",
+                            Status = "Pending",
+                            Title = "High consumption detected"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AlertNumber = "ALT-1008",
+                            CreatedDate = new DateOnly(2026, 11, 24),
+                            MeterId = 26,
+                            Severity = "Critical",
+                            Status = "Pending",
+                            Title = "Meter communication loss"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AlertNumber = "ALT-1009",
+                            CreatedDate = new DateOnly(2026, 11, 23),
+                            MeterId = 27,
+                            Severity = "Medium",
+                            Status = "Resolved",
+                            Title = "Voltage fluctuation detected"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AlertNumber = "ALT-1010",
+                            CreatedDate = new DateOnly(2026, 11, 25),
+                            MeterId = 37,
+                            Severity = "High",
+                            Status = "Pending",
+                            Title = "High consumption detected"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AlertNumber = "ALT-1011",
+                            CreatedDate = new DateOnly(2026, 11, 24),
+                            MeterId = 38,
+                            Severity = "Critical",
+                            Status = "Pending",
+                            Title = "Meter communication loss"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AlertNumber = "ALT-1012",
+                            CreatedDate = new DateOnly(2026, 11, 23),
+                            MeterId = 39,
+                            Severity = "Medium",
+                            Status = "Resolved",
+                            Title = "Voltage fluctuation detected"
+                        });
+                });
+
             modelBuilder.Entity("MDMS.Api.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -433,7 +601,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            LastUpdated = new DateOnly(2026, 11, 24),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1001",
                             ReadingKwh = 837.5m,
                             Status = "Active"
@@ -442,7 +610,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            LastUpdated = new DateOnly(2026, 11, 23),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1002",
                             ReadingKwh = 875.0m,
                             Status = "Maintenance"
@@ -451,7 +619,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 3,
                             CustomerId = 3,
-                            LastUpdated = new DateOnly(2026, 11, 22),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1003",
                             ReadingKwh = 912.5m,
                             Status = "Inactive"
@@ -460,7 +628,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 4,
                             CustomerId = 4,
-                            LastUpdated = new DateOnly(2026, 11, 21),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1004",
                             ReadingKwh = 950.0m,
                             Status = "Active"
@@ -469,7 +637,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 5,
                             CustomerId = 5,
-                            LastUpdated = new DateOnly(2026, 11, 20),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1005",
                             ReadingKwh = 987.5m,
                             Status = "Maintenance"
@@ -478,7 +646,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 6,
                             CustomerId = 6,
-                            LastUpdated = new DateOnly(2026, 11, 19),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1006",
                             ReadingKwh = 1025.0m,
                             Status = "Inactive"
@@ -487,7 +655,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 7,
                             CustomerId = 7,
-                            LastUpdated = new DateOnly(2026, 11, 18),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1007",
                             ReadingKwh = 1062.5m,
                             Status = "Active"
@@ -496,7 +664,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 8,
                             CustomerId = 8,
-                            LastUpdated = new DateOnly(2026, 11, 17),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1008",
                             ReadingKwh = 1100.0m,
                             Status = "Maintenance"
@@ -505,7 +673,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 9,
                             CustomerId = 9,
-                            LastUpdated = new DateOnly(2026, 11, 16),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1009",
                             ReadingKwh = 1137.5m,
                             Status = "Inactive"
@@ -514,7 +682,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 10,
                             CustomerId = 10,
-                            LastUpdated = new DateOnly(2026, 11, 15),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1010",
                             ReadingKwh = 1175.0m,
                             Status = "Active"
@@ -523,7 +691,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 11,
                             CustomerId = 11,
-                            LastUpdated = new DateOnly(2026, 11, 14),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1011",
                             ReadingKwh = 1212.5m,
                             Status = "Maintenance"
@@ -532,7 +700,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 12,
                             CustomerId = 12,
-                            LastUpdated = new DateOnly(2026, 11, 13),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1012",
                             ReadingKwh = 1250.0m,
                             Status = "Inactive"
@@ -541,7 +709,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 13,
                             CustomerId = 13,
-                            LastUpdated = new DateOnly(2026, 11, 12),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1013",
                             ReadingKwh = 1287.5m,
                             Status = "Active"
@@ -559,7 +727,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 15,
                             CustomerId = 15,
-                            LastUpdated = new DateOnly(2026, 11, 24),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1015",
                             ReadingKwh = 1362.5m,
                             Status = "Inactive"
@@ -568,7 +736,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 16,
                             CustomerId = 16,
-                            LastUpdated = new DateOnly(2026, 11, 23),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1016",
                             ReadingKwh = 1400.0m,
                             Status = "Active"
@@ -577,7 +745,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 17,
                             CustomerId = 17,
-                            LastUpdated = new DateOnly(2026, 11, 22),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1017",
                             ReadingKwh = 1437.5m,
                             Status = "Maintenance"
@@ -586,7 +754,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 18,
                             CustomerId = 18,
-                            LastUpdated = new DateOnly(2026, 11, 21),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1018",
                             ReadingKwh = 1475.0m,
                             Status = "Inactive"
@@ -595,7 +763,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 19,
                             CustomerId = 19,
-                            LastUpdated = new DateOnly(2026, 11, 20),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1019",
                             ReadingKwh = 1512.5m,
                             Status = "Active"
@@ -604,7 +772,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 20,
                             CustomerId = 20,
-                            LastUpdated = new DateOnly(2026, 11, 19),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1020",
                             ReadingKwh = 1550.0m,
                             Status = "Maintenance"
@@ -613,7 +781,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 21,
                             CustomerId = 21,
-                            LastUpdated = new DateOnly(2026, 11, 18),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1021",
                             ReadingKwh = 1587.5m,
                             Status = "Inactive"
@@ -622,7 +790,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 22,
                             CustomerId = 22,
-                            LastUpdated = new DateOnly(2026, 11, 17),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1022",
                             ReadingKwh = 1625.0m,
                             Status = "Active"
@@ -631,7 +799,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 23,
                             CustomerId = 23,
-                            LastUpdated = new DateOnly(2026, 11, 16),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1023",
                             ReadingKwh = 1662.5m,
                             Status = "Maintenance"
@@ -640,7 +808,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 24,
                             CustomerId = 24,
-                            LastUpdated = new DateOnly(2026, 11, 15),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1024",
                             ReadingKwh = 1700.0m,
                             Status = "Inactive"
@@ -649,7 +817,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 25,
                             CustomerId = 25,
-                            LastUpdated = new DateOnly(2026, 11, 14),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1025",
                             ReadingKwh = 1737.5m,
                             Status = "Active"
@@ -658,7 +826,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 26,
                             CustomerId = 26,
-                            LastUpdated = new DateOnly(2026, 11, 13),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1026",
                             ReadingKwh = 1775.0m,
                             Status = "Maintenance"
@@ -667,7 +835,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 27,
                             CustomerId = 27,
-                            LastUpdated = new DateOnly(2026, 11, 12),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1027",
                             ReadingKwh = 1812.5m,
                             Status = "Inactive"
@@ -685,7 +853,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 29,
                             CustomerId = 29,
-                            LastUpdated = new DateOnly(2026, 11, 24),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1029",
                             ReadingKwh = 1887.5m,
                             Status = "Maintenance"
@@ -694,7 +862,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 30,
                             CustomerId = 30,
-                            LastUpdated = new DateOnly(2026, 11, 23),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1030",
                             ReadingKwh = 1925.0m,
                             Status = "Inactive"
@@ -703,7 +871,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 31,
                             CustomerId = 31,
-                            LastUpdated = new DateOnly(2026, 11, 22),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1031",
                             ReadingKwh = 1962.5m,
                             Status = "Active"
@@ -712,7 +880,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 32,
                             CustomerId = 32,
-                            LastUpdated = new DateOnly(2026, 11, 21),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1032",
                             ReadingKwh = 2000.0m,
                             Status = "Maintenance"
@@ -721,7 +889,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 33,
                             CustomerId = 33,
-                            LastUpdated = new DateOnly(2026, 11, 20),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1033",
                             ReadingKwh = 2037.5m,
                             Status = "Inactive"
@@ -730,7 +898,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 34,
                             CustomerId = 34,
-                            LastUpdated = new DateOnly(2026, 11, 19),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1034",
                             ReadingKwh = 2075.0m,
                             Status = "Active"
@@ -739,7 +907,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 35,
                             CustomerId = 35,
-                            LastUpdated = new DateOnly(2026, 11, 18),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1035",
                             ReadingKwh = 2112.5m,
                             Status = "Maintenance"
@@ -748,7 +916,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 36,
                             CustomerId = 36,
-                            LastUpdated = new DateOnly(2026, 11, 17),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1036",
                             ReadingKwh = 2150.0m,
                             Status = "Inactive"
@@ -757,7 +925,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 37,
                             CustomerId = 37,
-                            LastUpdated = new DateOnly(2026, 11, 16),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1037",
                             ReadingKwh = 2187.5m,
                             Status = "Active"
@@ -766,7 +934,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 38,
                             CustomerId = 38,
-                            LastUpdated = new DateOnly(2026, 11, 15),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1038",
                             ReadingKwh = 2225.0m,
                             Status = "Maintenance"
@@ -775,7 +943,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 39,
                             CustomerId = 39,
-                            LastUpdated = new DateOnly(2026, 11, 14),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1039",
                             ReadingKwh = 2262.5m,
                             Status = "Inactive"
@@ -784,7 +952,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 40,
                             CustomerId = 40,
-                            LastUpdated = new DateOnly(2026, 11, 13),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1040",
                             ReadingKwh = 2300.0m,
                             Status = "Active"
@@ -793,7 +961,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 41,
                             CustomerId = 41,
-                            LastUpdated = new DateOnly(2026, 11, 12),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1041",
                             ReadingKwh = 2337.5m,
                             Status = "Maintenance"
@@ -811,7 +979,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 43,
                             CustomerId = 43,
-                            LastUpdated = new DateOnly(2026, 11, 24),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1043",
                             ReadingKwh = 2412.5m,
                             Status = "Active"
@@ -820,7 +988,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 44,
                             CustomerId = 44,
-                            LastUpdated = new DateOnly(2026, 11, 23),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1044",
                             ReadingKwh = 2450.0m,
                             Status = "Maintenance"
@@ -829,7 +997,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 45,
                             CustomerId = 45,
-                            LastUpdated = new DateOnly(2026, 11, 22),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1045",
                             ReadingKwh = 2487.5m,
                             Status = "Inactive"
@@ -838,7 +1006,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 46,
                             CustomerId = 46,
-                            LastUpdated = new DateOnly(2026, 11, 21),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1046",
                             ReadingKwh = 2525.0m,
                             Status = "Active"
@@ -847,7 +1015,7 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 47,
                             CustomerId = 47,
-                            LastUpdated = new DateOnly(2026, 11, 20),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1047",
                             ReadingKwh = 2562.5m,
                             Status = "Maintenance"
@@ -856,11 +1024,37 @@ namespace MDMS.Api.Migrations
                         {
                             Id = 48,
                             CustomerId = 48,
-                            LastUpdated = new DateOnly(2026, 11, 19),
+                            LastUpdated = new DateOnly(2026, 11, 25),
                             MeterNumber = "MTR-1048",
                             ReadingKwh = 2600.0m,
                             Status = "Inactive"
                         });
+                });
+
+            modelBuilder.Entity("MDMS.Api.Models.MeterReading", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MeterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("ReadingDate")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("ReadingKwh")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("decimal(12,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MeterId", "ReadingDate")
+                        .IsUnique();
+
+                    b.ToTable("MeterReadings");
                 });
 
             modelBuilder.Entity("MDMS.Api.Models.Zone", b =>
@@ -915,6 +1109,17 @@ namespace MDMS.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("MDMS.Api.Models.Alert", b =>
+                {
+                    b.HasOne("MDMS.Api.Models.Meter", "Meter")
+                        .WithMany("Alerts")
+                        .HasForeignKey("MeterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Meter");
+                });
+
             modelBuilder.Entity("MDMS.Api.Models.Customer", b =>
                 {
                     b.HasOne("MDMS.Api.Models.Zone", "Zone")
@@ -937,9 +1142,27 @@ namespace MDMS.Api.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("MDMS.Api.Models.MeterReading", b =>
+                {
+                    b.HasOne("MDMS.Api.Models.Meter", "Meter")
+                        .WithMany("Readings")
+                        .HasForeignKey("MeterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Meter");
+                });
+
             modelBuilder.Entity("MDMS.Api.Models.Customer", b =>
                 {
                     b.Navigation("Meters");
+                });
+
+            modelBuilder.Entity("MDMS.Api.Models.Meter", b =>
+                {
+                    b.Navigation("Alerts");
+
+                    b.Navigation("Readings");
                 });
 
             modelBuilder.Entity("MDMS.Api.Models.Zone", b =>

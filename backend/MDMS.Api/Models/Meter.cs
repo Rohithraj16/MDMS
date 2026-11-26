@@ -9,4 +9,6 @@ public sealed class Meter
     public DateOnly LastUpdated { get; set; }
     public int CustomerId { get; set; }
     public Customer Customer { get; set; } = null!;
+    public ICollection<Alert> Alerts { get; set; } = new List<Alert>();
+    public ICollection<MeterReading> Readings { get; set; } = new List<MeterReading>();
 }
