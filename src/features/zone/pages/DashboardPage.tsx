@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getErrorMessage } from "../../../services/http";
 import PageHeader from "../../../shared/components/PageHeader";
 import StatCard from "../../../shared/components/StatCard";
+import AddMeterDialog from "../components/AddMeterDialog";
 import {
-	createMeter,
-	getZoneCustomers,
 	getZoneDashboard,
 	getZones,
 	type DashboardPeriod,
-	type ZoneCustomer,
 	type ZoneDashboard,
 	type ZoneOption,
-} from "../services/zoneDashboardApi";
+} from "../services/zoneApi";
 import "./DashboardPage.css";
 
 const numberFormatter = new Intl.NumberFormat("en-IN", {
@@ -34,17 +32,7 @@ export default function DashboardPage() {
 	const [isLoadingZones, setIsLoadingZones] = useState(true);
 	const [zonesError, setZonesError] = useState<string | null>(null);
 	const [refreshKey, setRefreshKey] = useState(0);
-
 	const [isAddMeterOpen, setIsAddMeterOpen] = useState(false);
-	const [customerResult, setCustomerResult] = useState<{
-		zoneId: number;
-		items?: ZoneCustomer[];
-		error?: string;
-	} | null>(null);
-	const [selectedCustomerId, setSelectedCustomerId] = useState("");
-	const [meterNumber, setMeterNumber] = useState("");
-	const [isSavingMeter, setIsSavingMeter] = useState(false);
-	const [meterFormError, setMeterFormError] = useState<string | null>(null);
 
 	const selectedZone = useMemo(
 		() => zones.find((zone) => zone.id === selectedZoneId) ?? null,
@@ -63,18 +51,6 @@ export default function DashboardPage() {
 		(dashboardResult.key === dashboardRequestKey
 			? (dashboardResult.error ?? null)
 			: null);
-	const customers =
-		selectedZoneId !== null && customerResult?.zoneId === selectedZoneId
-			? (customerResult.items ?? [])
-			: [];
-	const isLoadingCustomers =
-		isAddMeterOpen &&
-		selectedZoneId !== null &&
-		customerResult?.zoneId !== selectedZoneId;
-	const customerLoadError =
-		selectedZoneId !== null && customerResult?.zoneId === selectedZoneId
-			? (customerResult.error ?? null)
-			: null;
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -122,36 +98,6 @@ export default function DashboardPage() {
 		return () => controller.abort();
 	}, [period, refreshKey, selectedZoneId]);
 
-	useEffect(() => {
-		if (!isAddMeterOpen || selectedZoneId === null) {
-			return;
-		}
-
-		const controller = new AbortController();
-		getZoneCustomers(selectedZoneId, controller.signal)
-			.then((items) => {
-				if (controller.signal.aborted) {
-					return;
-				}
-				setCustomerResult({ zoneId: selectedZoneId, items });
-				setSelectedCustomerId((current) =>
-					items.some((customer) => String(customer.id) === current)
-						? current
-						: String(items[0]?.id ?? ""),
-				);
-			})
-			.catch((error: unknown) => {
-				if (!controller.signal.aborted) {
-					setCustomerResult({
-						zoneId: selectedZoneId,
-						error: getErrorMessage(error),
-					});
-				}
-			});
-
-		return () => controller.abort();
-	}, [isAddMeterOpen, selectedZoneId]);
-
 	function generateReport() {
 		if (!dashboard) {
 			return;
@@ -181,29 +127,6 @@ export default function DashboardPage() {
 		anchor.click();
 		anchor.remove();
 		window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 0);
-	}
-
-	async function handleCreateMeter(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault();
-		if (selectedZoneId === null || selectedCustomerId === "") {
-			return;
-		}
-
-		setIsSavingMeter(true);
-		setMeterFormError(null);
-		try {
-			await createMeter({
-				meterNumber: meterNumber.trim(),
-				customerId: Number(selectedCustomerId),
-			});
-			setIsAddMeterOpen(false);
-			setMeterNumber("");
-			setRefreshKey((current) => current + 1);
-		} catch (error: unknown) {
-			setMeterFormError(getErrorMessage(error));
-		} finally {
-			setIsSavingMeter(false);
-		}
 	}
 
 	const maximumUsage = Math.max(
@@ -240,11 +163,7 @@ export default function DashboardPage() {
 						<button
 							className="zone-dashboard__button zone-dashboard__button--secondary"
 							type="button"
-							onClick={() => {
-								setMeterFormError(null);
-								setCustomerResult(null);
-								setIsAddMeterOpen(true);
-							}}
+							onClick={() => setIsAddMeterOpen(true)}
 							disabled={selectedZoneId === null}
 						>
 							Add Meter
@@ -372,90 +291,13 @@ export default function DashboardPage() {
 			</section>
 
 			{isAddMeterOpen && selectedZone && (
-				<div
-					className="zone-dashboard__modal-backdrop"
-					onMouseDown={(event) => {
-						if (event.target === event.currentTarget) {
-							setIsAddMeterOpen(false);
-						}
-					}}
-				>
-					<section
-						className="zone-dashboard__modal"
-						role="dialog"
-						aria-modal="true"
-						aria-labelledby="add-meter-title"
-					>
-						<h2 id="add-meter-title">Add meter to {selectedZone.name}</h2>
-						<form onSubmit={handleCreateMeter}>
-							<label className="zone-dashboard__form-field">
-								<span>Meter number</span>
-								<input
-									autoFocus
-									required
-									minLength={4}
-									maxLength={24}
-									value={meterNumber}
-									onChange={(event) => setMeterNumber(event.target.value)}
-									placeholder="MTR-2001"
-								/>
-							</label>
-							<label className="zone-dashboard__form-field">
-								<span>Customer</span>
-								<select
-									required
-									value={selectedCustomerId}
-									onChange={(event) => setSelectedCustomerId(event.target.value)}
-									disabled={isLoadingCustomers || customers.length === 0}
-								>
-									{customers.map((customer) => (
-										<option key={customer.id} value={customer.id}>
-											{customer.accountNumber} — {customer.fullName}
-										</option>
-									))}
-								</select>
-							</label>
-							{isLoadingCustomers && (
-								<p className="zone-dashboard__status" role="status">
-									Loading customers…
-								</p>
-							)}
-							{!isLoadingCustomers &&
-								!customerLoadError &&
-								customers.length === 0 && (
-								<p className="zone-dashboard__status">
-									No customers are available in this zone.
-								</p>
-							)}
-							{(meterFormError || customerLoadError) && (
-								<p className="zone-dashboard__error" role="alert">
-									{meterFormError ?? customerLoadError}
-								</p>
-							)}
-							<div className="zone-dashboard__modal-actions">
-								<button
-									className="zone-dashboard__button zone-dashboard__button--secondary"
-									type="button"
-									onClick={() => setIsAddMeterOpen(false)}
-									disabled={isSavingMeter}
-								>
-									Cancel
-								</button>
-								<button
-									className="zone-dashboard__button zone-dashboard__button--primary"
-									type="submit"
-									disabled={
-										isSavingMeter ||
-										isLoadingCustomers ||
-										customers.length === 0
-									}
-								>
-									{isSavingMeter ? "Saving…" : "Save Meter"}
-								</button>
-							</div>
-						</form>
-					</section>
-				</div>
+				<AddMeterDialog
+					isOpen={isAddMeterOpen}
+					zoneId={selectedZone.id}
+					zoneName={selectedZone.name}
+					onClose={() => setIsAddMeterOpen(false)}
+					onCreated={() => setRefreshKey((current) => current + 1)}
+				/>
 			)}
 		</div>
 	);

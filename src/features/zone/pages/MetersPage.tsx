@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { getErrorMessage } from "../../../services/http";
 import DataTable, {
   type DataTableColumn,
@@ -8,13 +9,21 @@ import StatusBadge, {
   type StatusBadgeTone,
 } from "../../../shared/components/StatusBadge";
 import Tabs, { type TabItem } from "../../../shared/components/Tabs";
+import AddMeterDialog from "../components/AddMeterDialog";
 import { getMeters } from "../services/metersApi";
 import type { Meter, MeterStatus } from "../types/Meter";
+import "./MetersPage.css";
 
 type MeterFilter = "all" | MeterStatus;
 
 const meterColumns: DataTableColumn<Meter>[] = [
-  { key: "id", header: "Meter ID" },
+  {
+    key: "id",
+    header: "Meter ID",
+    render: (meter) => (
+      <Link to={`/zone/meters/${encodeURIComponent(meter.id)}`}>{meter.id}</Link>
+    ),
+  },
   { key: "zone", header: "Zone" },
   {
     key: "status",
@@ -45,28 +54,42 @@ const meterTabs: TabItem<MeterFilter>[] = [
 
 export default function MetersPage() {
   const [filter, setFilter] = useState<MeterFilter>("all");
-  const [meters, setMeters] = useState<Meter[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
+  const [metersResult, setMetersResult] = useState<{
+    key: number;
+    data?: Meter[];
+    error?: string;
+  } | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isAddMeterOpen, setIsAddMeterOpen] = useState(false);
+  const meters = useMemo(
+    () =>
+      metersResult?.key === refreshKey ? (metersResult.data ?? []) : [],
+    [metersResult, refreshKey],
+  );
+  const isLoading = metersResult?.key !== refreshKey;
+  const loadError =
+    metersResult?.key === refreshKey ? (metersResult.error ?? null) : null;
 
   useEffect(() => {
     const controller = new AbortController();
 
     getMeters(controller.signal)
-      .then(setMeters)
-      .catch((error: unknown) => {
+      .then((data) => {
         if (!controller.signal.aborted) {
-          setLoadError(getErrorMessage(error));
+          setMetersResult({ key: refreshKey, data });
         }
       })
-      .finally(() => {
+      .catch((error: unknown) => {
         if (!controller.signal.aborted) {
-          setIsLoading(false);
+          setMetersResult({
+            key: refreshKey,
+            error: getErrorMessage(error),
+          });
         }
       });
 
     return () => controller.abort();
-  }, []);
+  }, [refreshKey]);
 
   const visibleMeters = useMemo(
     () =>
@@ -81,6 +104,15 @@ export default function MetersPage() {
       <PageHeader
         title="Zone Meter Management"
         subtitle="Meters loaded from the MDMS API."
+        actions={
+          <button
+            className="zone-meters__add-button"
+            type="button"
+            onClick={() => setIsAddMeterOpen(true)}
+          >
+            Add Meter
+          </button>
+        }
       />
       <Tabs
         items={meterTabs}
@@ -97,6 +129,16 @@ export default function MetersPage() {
           data={visibleMeters}
           columns={meterColumns}
           getRowKey={(meter) => meter.id}
+        />
+      )}
+      {isAddMeterOpen && (
+        <AddMeterDialog
+          isOpen
+          onClose={() => setIsAddMeterOpen(false)}
+          onCreated={() => {
+            setIsAddMeterOpen(false);
+            setRefreshKey((current) => current + 1);
+          }}
         />
       )}
     </section>

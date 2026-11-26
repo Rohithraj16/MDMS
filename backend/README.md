@@ -30,7 +30,9 @@ The migrations seed four zones, twelve customers per zone, one meter per custome
 
 - `GET /api/zones`
 - `GET /api/customers` (optional `zoneId` query parameter)
+- `GET /api/customers/{customerId}` (customer and associated meter details)
 - `GET /api/meters` (optional `zoneId` and `status` query parameters)
+- `GET /api/meters/{meterNumber}` (meter and registered customer details)
 - `GET /api/zones/{zoneId}/dashboard?period=weekly|monthly`
 - `POST /api/meters` to add an active meter for an existing customer:
 
