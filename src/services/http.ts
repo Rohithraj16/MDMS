@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 
-// JSON Server runs on port 3000 by default (Vite uses 5173, so there's no clash)
-const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5247";
 
 const http = axios.create({
 	baseURL: BASE_URL,
@@ -14,12 +13,28 @@ const http = axios.create({
 // Turns any error into a readable message that pages can show in a toast or error state
 export function getErrorMessage(error: unknown): string {
 	if (axios.isAxiosError(error)) {
+		const responseData: unknown = error.response?.data;
+		if (typeof responseData === "string" && responseData.trim()) {
+			return responseData;
+		}
+		if (
+			typeof responseData === "object" &&
+			responseData !== null &&
+			"title" in responseData &&
+			typeof responseData.title === "string"
+		) {
+			return responseData.title;
+		}
 		if (error.code === "ECONNABORTED")
 			return "The request timed out. Please try again.";
 		if (!error.response)
-			return "Cannot reach the server. Is JSON Server running?";
+			return "Cannot reach the API server. Is the ASP.NET Core API running?";
 		if (error.response.status === 404)
 			return "The requested data was not found.";
+		if (error.response.status === 409)
+			return "This value conflicts with an existing record.";
+		if (error.response.status === 400)
+			return "Please check the provided information and try again.";
 		if (error.response.status >= 500)
 			return "Server error. Please try again later.";
 	}
@@ -29,8 +44,9 @@ export function getErrorMessage(error: unknown): string {
 http.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError) => {
-		// Central place for logging; components never handle raw Axios errors
-		console.error("API error:", error.message);
+		if (!axios.isCancel(error)) {
+			console.error("API error:", error.message);
+		}
 		return Promise.reject(error);
 	},
 );

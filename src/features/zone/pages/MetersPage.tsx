@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { getErrorMessage } from "../../../services/http";
 import DataTable, {
   type DataTableColumn,
 } from "../../../shared/components/DataTable";
@@ -7,65 +9,21 @@ import StatusBadge, {
   type StatusBadgeTone,
 } from "../../../shared/components/StatusBadge";
 import Tabs, { type TabItem } from "../../../shared/components/Tabs";
+import AddMeterDialog from "../components/AddMeterDialog";
+import { getMeters } from "../services/metersApi";
+import type { Meter, MeterStatus } from "../types/Meter";
+import "./MetersPage.css";
 
-type MeterStatus = "Active" | "Inactive" | "Maintenance";
 type MeterFilter = "all" | MeterStatus;
 
-interface MeterRow {
-  id: string;
-  zone: string;
-  status: MeterStatus;
-  readingKwh: number;
-  lastUpdated: string;
-}
-
-const previewMeters: MeterRow[] = [
+const meterColumns: DataTableColumn<Meter>[] = [
   {
-    id: "MTR-1001",
-    zone: "North",
-    status: "Active",
-    readingKwh: 1284,
-    lastUpdated: "2026-11-24",
+    key: "id",
+    header: "Meter ID",
+    render: (meter) => (
+      <Link to={`/zone/meters/${encodeURIComponent(meter.id)}`}>{meter.id}</Link>
+    ),
   },
-  {
-    id: "MTR-1002",
-    zone: "South",
-    status: "Maintenance",
-    readingKwh: 947,
-    lastUpdated: "2026-11-23",
-  },
-  {
-    id: "MTR-1003",
-    zone: "East",
-    status: "Inactive",
-    readingKwh: 1532,
-    lastUpdated: "2026-11-22",
-  },
-  {
-    id: "MTR-1004",
-    zone: "West",
-    status: "Active",
-    readingKwh: 1108,
-    lastUpdated: "2026-11-24",
-  },
-  {
-    id: "MTR-1005",
-    zone: "North",
-    status: "Active",
-    readingKwh: 1765,
-    lastUpdated: "2026-11-21",
-  },
-  {
-    id: "MTR-1006",
-    zone: "South",
-    status: "Inactive",
-    readingKwh: 832,
-    lastUpdated: "2026-11-20",
-  },
-];
-
-const meterColumns: DataTableColumn<MeterRow>[] = [
-  { key: "id", header: "Meter ID" },
   { key: "zone", header: "Zone" },
   {
     key: "status",
@@ -73,13 +31,19 @@ const meterColumns: DataTableColumn<MeterRow>[] = [
     render: (meter) => (
       <StatusBadge
         label={meter.status}
-        tone={meter.status.toLocaleLowerCase() as StatusBadgeTone}
+        tone={statusTones[meter.status]}
       />
     ),
   },
   { key: "readingKwh", header: "Reading (kWh)" },
   { key: "lastUpdated", header: "Last Updated" },
 ];
+
+const statusTones: Record<MeterStatus, StatusBadgeTone> = {
+  Active: "active",
+  Inactive: "inactive",
+  Maintenance: "maintenance",
+};
 
 const meterTabs: TabItem<MeterFilter>[] = [
   { value: "all", label: "All meters" },
@@ -90,19 +54,65 @@ const meterTabs: TabItem<MeterFilter>[] = [
 
 export default function MetersPage() {
   const [filter, setFilter] = useState<MeterFilter>("all");
+  const [metersResult, setMetersResult] = useState<{
+    key: number;
+    data?: Meter[];
+    error?: string;
+  } | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isAddMeterOpen, setIsAddMeterOpen] = useState(false);
+  const meters = useMemo(
+    () =>
+      metersResult?.key === refreshKey ? (metersResult.data ?? []) : [],
+    [metersResult, refreshKey],
+  );
+  const isLoading = metersResult?.key !== refreshKey;
+  const loadError =
+    metersResult?.key === refreshKey ? (metersResult.error ?? null) : null;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    getMeters(controller.signal)
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setMetersResult({ key: refreshKey, data });
+        }
+      })
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setMetersResult({
+            key: refreshKey,
+            error: getErrorMessage(error),
+          });
+        }
+      });
+
+    return () => controller.abort();
+  }, [refreshKey]);
+
   const visibleMeters = useMemo(
     () =>
       filter === "all"
-        ? previewMeters
-        : previewMeters.filter((meter) => meter.status === filter),
-    [filter],
+        ? meters
+        : meters.filter((meter) => meter.status === filter),
+    [filter, meters],
   );
 
   return (
     <section>
       <PageHeader
         title="Zone Meter Management"
-        subtitle="Sample data for preview; API connection is not set up yet."
+        subtitle="Meters loaded from the MDMS API."
+        actions={
+          <button
+            className="zone-meters__add-button"
+            type="button"
+            onClick={() => setIsAddMeterOpen(true)}
+          >
+            Add Meter
+          </button>
+        }
       />
       <Tabs
         items={meterTabs}
@@ -110,12 +120,27 @@ export default function MetersPage() {
         onChange={setFilter}
         ariaLabel="Filter meters by status"
       />
-      <DataTable
-        data={visibleMeters}
-        columns={meterColumns}
-        getRowKey={(meter) => meter.id}
-        pageSize={3}
-      />
+      {isLoading ? (
+        <p role="status">Loading meters...</p>
+      ) : loadError ? (
+        <p role="alert">{loadError}</p>
+      ) : (
+        <DataTable
+          data={visibleMeters}
+          columns={meterColumns}
+          getRowKey={(meter) => meter.id}
+        />
+      )}
+      {isAddMeterOpen && (
+        <AddMeterDialog
+          isOpen
+          onClose={() => setIsAddMeterOpen(false)}
+          onCreated={() => {
+            setIsAddMeterOpen(false);
+            setRefreshKey((current) => current + 1);
+          }}
+        />
+      )}
     </section>
   );
 }

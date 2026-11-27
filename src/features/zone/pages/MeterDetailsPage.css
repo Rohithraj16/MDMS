@@ -1,0 +1,91 @@
+.meter-details {
+	width: 100%;
+	min-width: 0;
+}
+
+.meter-details__back-link,
+.meter-details__customers-link {
+	color: #2563eb;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.meter-details__back-link:hover,
+.meter-details__customers-link:hover {
+	text-decoration: underline;
+}
+
+.meter-details__grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.meter-details__card {
+	min-width: 0;
+	padding: 22px;
+	border: 1px solid var(--border-color, #e5e7eb);
+	border-radius: 14px;
+	background: var(--card-bg, #ffffff);
+}
+
+.meter-details__card h2 {
+	margin: 0 0 18px;
+	color: var(--text-primary, #111827);
+	font-size: 17px;
+}
+
+.meter-details__card dl {
+	display: grid;
+	gap: 14px;
+	margin: 0;
+}
+
+.meter-details__card dl div {
+	display: grid;
+	grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.2fr);
+	gap: 12px;
+	align-items: center;
+}
+
+.meter-details__card dt {
+	color: var(--text-secondary, #64748b);
+	font-size: 13px;
+}
+
+.meter-details__card dd {
+	margin: 0;
+	color: var(--text-primary, #1f2937);
+	font-size: 14px;
+	font-weight: 500;
+	overflow-wrap: anywhere;
+}
+
+.meter-details__customers-link {
+	display: inline-block;
+	margin-top: 20px;
+}
+
+.meter-details__message,
+.meter-details__error {
+	margin: 0;
+	padding: 14px;
+	border-radius: 8px;
+}
+
+.meter-details__message {
+	color: var(--text-secondary, #64748b);
+}
+
+.meter-details__error {
+	border: 1px solid #fecaca;
+	background: #fef2f2;
+	color: #b91c1c;
+}
+
+@media (max-width: 700px) {
+	.meter-details__grid {
+		grid-template-columns: 1fr;
+	}
+}
