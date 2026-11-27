@@ -41,6 +41,50 @@ public static class SeedData
             })
             .ToArray();
 
+    public static ZoneSettings[] ZoneSettings =>
+    [
+        new()
+        {
+            ZoneId = 1,
+            HighConsumptionThresholdKwh = 15m,
+            LowVoltageThresholdVolts = 210m,
+            HighVoltageThresholdVolts = 250m,
+            EmailNotificationsEnabled = true,
+            SmsNotificationsEnabled = true,
+            InAppNotificationsEnabled = true,
+        },
+        new()
+        {
+            ZoneId = 2,
+            HighConsumptionThresholdKwh = 15m,
+            LowVoltageThresholdVolts = 210m,
+            HighVoltageThresholdVolts = 250m,
+            EmailNotificationsEnabled = true,
+            SmsNotificationsEnabled = true,
+            InAppNotificationsEnabled = true,
+        },
+        new()
+        {
+            ZoneId = 3,
+            HighConsumptionThresholdKwh = 15m,
+            LowVoltageThresholdVolts = 210m,
+            HighVoltageThresholdVolts = 250m,
+            EmailNotificationsEnabled = true,
+            SmsNotificationsEnabled = true,
+            InAppNotificationsEnabled = true,
+        },
+        new()
+        {
+            ZoneId = 4,
+            HighConsumptionThresholdKwh = 15m,
+            LowVoltageThresholdVolts = 210m,
+            HighVoltageThresholdVolts = 250m,
+            EmailNotificationsEnabled = true,
+            SmsNotificationsEnabled = true,
+            InAppNotificationsEnabled = true,
+        },
+    ];
+
     public static Alert[] Alerts =>
     [
         new() { Id = 1, AlertNumber = "ALT-1001", Title = "High consumption detected", Severity = "High", Status = "Pending", CreatedDate = ReadingsThrough, MeterId = 1 },

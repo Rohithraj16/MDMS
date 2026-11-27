@@ -17,8 +17,8 @@
 .sidebar {
 	width: 240px;
 	flex-shrink: 0;
-	border-right: 1px solid var(--border, #e5e7eb);
-	background: var(--surface, #fff);
+	border-right: 1px solid var(--border-color, #e5e7eb);
+	background: var(--surface-background, #fff);
 	padding: 16px 12px;
 }
 .sidebar__brand {
@@ -48,14 +48,14 @@
 	font-size: 0.95rem;
 }
 .sidebar__link:hover {
-	background: var(--hover, #f3f4f6);
+	background: var(--surface-muted, #f3f4f6);
 }
 .sidebar__link--active {
-	background: var(--primary, #2563eb);
-	color: #fff;
+	background: var(--accent-color, #2563eb);
+	color: var(--page-background, #fff);
 }
 .sidebar__link--active:hover {
-	background: var(--primary, #2563eb);
+	background: var(--accent-color, #2563eb);
 }
 
 /* Header */
@@ -64,8 +64,8 @@
 	align-items: center;
 	gap: 12px;
 	padding: 12px 24px;
-	border-bottom: 1px solid var(--border, #e5e7eb);
-	background: var(--surface, #fff);
+	border-bottom: 1px solid var(--border-color, #e5e7eb);
+	background: var(--surface-background, #fff);
 }
 .app-header__title {
 	font-weight: 600;
@@ -80,12 +80,12 @@
 .app-header__badge {
 	padding: 2px 10px;
 	border-radius: 999px;
-	background: var(--hover, #f3f4f6);
+	background: var(--surface-muted, #f3f4f6);
 	font-size: 0.8rem;
 }
 .app-header__menu,
 .app-header__logout {
-	border: 1px solid var(--border, #d1d5db);
+	border: 1px solid var(--border-color, #d1d5db);
 	border-radius: 8px;
 	background: none;
 	color: inherit;

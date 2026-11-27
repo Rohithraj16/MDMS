@@ -11,6 +11,7 @@ public sealed class MDMSDbContext(DbContextOptions<MDMSDbContext> options)
     public DbSet<Meter> Meters => Set<Meter>();
     public DbSet<Alert> Alerts => Set<Alert>();
     public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
+    public DbSet<ZoneSettings> ZoneSettings => Set<ZoneSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,6 +76,19 @@ public sealed class MDMSDbContext(DbContextOptions<MDMSDbContext> options)
                 .WithMany(meter => meter.Readings)
                 .HasForeignKey(reading => reading.MeterId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ZoneSettings>(entity =>
+        {
+            entity.HasKey(settings => settings.ZoneId);
+            entity.Property(settings => settings.HighConsumptionThresholdKwh).HasPrecision(8, 2);
+            entity.Property(settings => settings.LowVoltageThresholdVolts).HasPrecision(8, 2);
+            entity.Property(settings => settings.HighVoltageThresholdVolts).HasPrecision(8, 2);
+            entity.HasOne<Zone>()
+                .WithOne()
+                .HasForeignKey<ZoneSettings>(settings => settings.ZoneId)
+                .OnDelete(DeleteBehavior.Cascade);
+            entity.HasData(SeedData.ZoneSettings);
         });
 
         base.OnModelCreating(modelBuilder);

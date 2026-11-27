@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ROLE_LABELS } from "./menuConfig";
 import type { Role } from "./menuConfig";
+import ThemeToggle from "../theme/ThemeToggle";
 
 interface HeaderProps {
 	role: Role;
@@ -25,6 +26,7 @@ export default function Header({ role, menuOpen, onToggleMenu }: HeaderProps) {
 			<span className="app-header__title">Meter Data Management System</span>
 			<div className="app-header__right">
 				<span className="app-header__badge">{ROLE_LABELS[role]}</span>
+				<ThemeToggle />
 				<Link to="/profile">Profile</Link>
 				{/* Temporary: real logout comes with authentication */}
 				<button

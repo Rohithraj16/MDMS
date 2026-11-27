@@ -37,3 +37,46 @@ Accept: application/json
 
 GET {{MDMS.Api_HostAddress}}/api/zones/1/dashboard?period=monthly
 Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/reports/consumption?fromDate=2026-11-01&toDate=2026-11-07
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/reports/consumption?fromDate=2026-11-01&toDate=2026-11-07&meterNumber=MTR-1001
+Accept: application/json
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/alerts?status=Pending
+Accept: application/json
+
+###
+
+PATCH {{MDMS.Api_HostAddress}}/api/zones/1/alerts/REPLACE_WITH_ALERT_NUMBER/status
+Content-Type: application/json
+
+{
+  "status": "Resolved"
+}
+
+###
+
+GET {{MDMS.Api_HostAddress}}/api/zones/1/settings
+Accept: application/json
+
+###
+
+PUT {{MDMS.Api_HostAddress}}/api/zones/1/settings
+Content-Type: application/json
+
+{
+  "highConsumptionThresholdKwh": 15,
+  "lowVoltageThresholdVolts": 210,
+  "highVoltageThresholdVolts": 250,
+  "emailNotificationsEnabled": true,
+  "smsNotificationsEnabled": true,
+  "inAppNotificationsEnabled": true
+}
