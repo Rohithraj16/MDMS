@@ -12,6 +12,51 @@ public sealed class EndUserController(MDMSDbContext dbContext) : ControllerBase
     // Phase 1 has no authentication yet, so the demo end user is customer 1.
     private const int DemoCustomerId = 1;
 
+    [HttpGet("dashboard")]
+    public async Task<ActionResult<EndUserDashboardResponse>> GetDashboard(
+        [FromQuery] string period = "week",
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (period is not ("day" or "week" or "month" or "year"))
+        {
+            return BadRequest("Period must be day, week, month, or year.");
+        }
+
+        var customer = await dbContext.Customers
+            .AsNoTracking()
+            .Where(item => item.Id == DemoCustomerId)
+            .Select(item => new
+            {
+                item.FullName,
+                ActiveMeters = item.Meters.Count(meter => meter.Status == "Active"),
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (customer is null)
+        {
+            return NotFound();
+        }
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var currentMonth = new DateOnly(today.Year, today.Month, 1);
+        var currentBill = BuildBills(today).First().Amount;
+        var currentConsumption = BuildBillDays(
+            currentMonth,
+            DateTime.DaysInMonth(currentMonth.Year, currentMonth.Month)
+        ).Sum(day => day.ConsumptionKwh);
+        var unreadCount = BuildNotifications().Count(notification => !notification.IsRead);
+        var points = BuildDashboardSeries(period);
+
+        return Ok(new EndUserDashboardResponse(
+            customer.FullName,
+            currentConsumption,
+            currentBill,
+            customer.ActiveMeters,
+            unreadCount,
+            points
+        ));
+    }
+
     [HttpGet("bills")]
     public async Task<ActionResult<IReadOnlyList<EndUserBillResponse>>> GetBills(
         CancellationToken cancellationToken
@@ -87,6 +132,30 @@ public sealed class EndUserController(MDMSDbContext dbContext) : ControllerBase
         return Ok(new MeterDataResponse(meter, current, previous));
     }
 
+    [HttpGet("notifications")]
+    public async Task<ActionResult<IReadOnlyList<EndUserNotificationResponse>>> GetNotifications(
+        [FromQuery] bool unreadOnly = false,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var customerExists = await dbContext.Customers.AnyAsync(
+            customer => customer.Id == DemoCustomerId,
+            cancellationToken
+        );
+        if (!customerExists)
+        {
+            return NotFound();
+        }
+
+        var notifications = BuildNotifications();
+        if (unreadOnly)
+        {
+            notifications = notifications.Where(item => !item.IsRead).ToArray();
+        }
+
+        return Ok(notifications);
+    }
+
     private static IReadOnlyList<EndUserBillResponse> BuildBills(DateOnly today)
     {
         var currentMonth = new DateOnly(today.Year, today.Month, 1);
@@ -134,6 +203,53 @@ public sealed class EndUserController(MDMSDbContext dbContext) : ControllerBase
         }
 
         return days;
+    }
+
+    private static IReadOnlyList<EndUserNotificationResponse> BuildNotifications()
+    {
+        var samples = new (string Type, string Title, string Message)[]
+        {
+            ("Bill", "Your latest bill is ready", "Your November bill is available to view."),
+            ("Payment", "Payment due soon", "Your electricity bill is due in five days."),
+            ("Payment", "Payment received", "We received your payment of ₹1,860."),
+            ("Usage", "Higher than usual consumption", "Your usage was higher than your recent average yesterday."),
+            ("Meter", "Meter maintenance scheduled", "A technician visit is scheduled for your area."),
+            ("Bill", "Your October bill is ready", "Your October bill is available to view."),
+            ("Payment", "Payment due soon", "Your October bill is due in five days."),
+            ("Usage", "Weekly usage summary", "Your weekly consumption summary is ready."),
+            ("Meter", "Meter reading received", "A new reading was received from meter MTR-1001."),
+            ("Payment", "Payment received", "Your recent payment has been recorded."),
+            ("Usage", "Higher than usual consumption", "Your usage was higher than usual this week."),
+            ("Bill", "Your September bill is ready", "Your September bill is available to view."),
+            ("Meter", "Meter maintenance completed", "Scheduled maintenance for your meter is complete."),
+            ("Payment", "Payment due reminder", "Your bill payment date is approaching."),
+            ("Usage", "Monthly usage summary", "Your monthly consumption summary is ready."),
+        };
+
+        return samples.Select((sample, index) => new EndUserNotificationResponse(
+            $"NTF-{index + 1:0000}",
+            sample.Type,
+            sample.Title,
+            sample.Message,
+            DateTimeOffset.UtcNow.AddHours(-index * 5),
+            index % 3 != 0
+        )).ToArray();
+    }
+
+    private static IReadOnlyList<DashboardConsumptionPointResponse> BuildDashboardSeries(string period)
+    {
+        var labels = period switch
+        {
+            "day" => new[] { "12am", "4am", "8am", "12pm", "4pm", "8pm" },
+            "week" => new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" },
+            "month" => new[] { "W1", "W2", "W3", "W4" },
+            _ => new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" },
+        };
+
+        return labels.Select((label, index) => new DashboardConsumptionPointResponse(
+            label,
+            10 + ((index * 37) % 23)
+        )).ToArray();
     }
 
     private static IReadOnlyList<MeterUsagePointResponse> BuildUsageSeries(

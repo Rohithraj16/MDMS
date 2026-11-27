@@ -188,10 +188,6 @@ export default function UsersPage() {
     (user) => user.status === "Active",
   ).length;
 
-  const deactivatedCount = sampleUsers.filter(
-    (user) => user.status === "Deactivated",
-  ).length;
-
   const yearlyStats = yearlyUserStats[selectedYear];
   const totalYearlyUsers = yearlyStats.active + yearlyStats.deactivated;
   const activePercentage =
