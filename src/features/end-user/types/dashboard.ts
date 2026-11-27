@@ -6,6 +6,7 @@ export interface ConsumptionPoint {
 }
 
 export interface DashboardData {
+	dataSource?: "api" | "demo";
 	userName: string;
 	currentConsumption: number; // kWh in the selected period
 	currentBill: number; // rupees

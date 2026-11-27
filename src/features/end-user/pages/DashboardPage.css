@@ -14,6 +14,7 @@
 	opacity: 0.9;
 	font-size: 0.9rem;
 }
+.dashboard-demo-note { margin: -8px 0 20px; padding: 10px 12px; border-radius: 8px; background: var(--surface-muted); color: var(--text-secondary); font-size: .85rem; }
 
 .stat-grid {
 	display: grid;

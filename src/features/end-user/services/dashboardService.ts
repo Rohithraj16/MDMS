@@ -1,3 +1,4 @@
+import axios from "axios";
 import http from "../../../services/http";
 import type { DashboardData, Period } from "../types/dashboard";
 
@@ -41,11 +42,17 @@ function mockDashboard(period: Period): DashboardData {
 export async function getDashboard(period: Period): Promise<DashboardData> {
 	if (USE_MOCK) {
 		await new Promise((resolve) => setTimeout(resolve, 300));
-		return mockDashboard(period);
+		return { ...mockDashboard(period), dataSource: "demo" };
 	}
-	// Change this path (and map the response here) to match the C# API
-	const { data } = await http.get<DashboardData>("/api/enduser/dashboard", {
-		params: { period },
-	});
-	return data;
+	try {
+		const { data } = await http.get<DashboardData>("/api/enduser/dashboard", {
+			params: { period },
+		});
+		return { ...data, dataSource: "api" };
+	} catch (error) {
+		if (axios.isAxiosError(error) && !error.response && !axios.isCancel(error)) {
+			return { ...mockDashboard(period), dataSource: "demo" };
+		}
+		throw error;
+	}
 }

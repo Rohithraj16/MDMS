@@ -34,6 +34,7 @@ export default function DashboardPage() {
 				<h2>Welcome back{data ? `, ${data.userName}` : ""}</h2>
 				<p>{today}</p>
 			</section>
+			{data?.dataSource === "demo" && <p className="dashboard-demo-note" role="status">Showing demo dashboard data because the API server is unavailable.</p>}
 
 			{error && (
 				<div className="dash-error" role="alert">

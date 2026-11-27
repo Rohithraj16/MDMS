@@ -5,7 +5,6 @@ import StatCard from "../../../shared/components/StatCard";
 import DataTable, {
   type DataTableColumn,
 } from "../../../shared/components/DataTable";
-import StatusBadge from "../../../shared/components/StatusBadge";
 import "./AuditLogsPage.css";
 
 type AuditStatus = "Success" | "Failed" | "Warning";
@@ -85,12 +84,6 @@ const sampleLogs: AuditLog[] = [
     status: "Success",
   },
 ];
-
-const statusTone = {
-  Success: "success",
-  Failed: "danger",
-  Warning: "warning",
-} as const;
 
 const formatTimestamp = (timestamp: string) =>
   new Date(timestamp).toLocaleString("en-IN", {
