@@ -1,5 +1,5 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHeader from "../../../shared/components/PageHeader";
 import DataTable from "../../../shared/components/DataTable";
@@ -150,8 +150,31 @@ export default function ZonesPage() {
     (zone) => zone.status === "Maintenance",
   ).length;
 
+  function closeForm() {
+    setShowForm(false);
+    setFormMessage("");
+  }
+
+  // Close the modal when Escape is pressed.
+  useEffect(() => {
+    if (!showForm) return;
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        closeForm();
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showForm]);
+
   function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     setFormMessage(
       "Form validation successful. API integration is pending; no data has been saved.",
     );
@@ -167,8 +190,8 @@ export default function ZonesPage() {
             type="button"
             className="zones-add-button"
             onClick={() => {
-              setShowForm((current) => !current);
               setFormMessage("");
+              setShowForm(true);
             }}
           >
             <span>＋</span> Add New Zone
@@ -207,88 +230,6 @@ export default function ZonesPage() {
         />
       </section>
 
-      {showForm && (
-        <section className="zones-form-panel">
-          <div className="zones-form-heading">
-            <div>
-              <h2>Add New Zone</h2>
-              <p>Enter the basic information for the new operational zone.</p>
-            </div>
-            <button
-              type="button"
-              className="zones-close-button"
-              onClick={() => setShowForm(false)}
-              aria-label="Close form"
-            >
-              ×
-            </button>
-          </div>
-
-          <form onSubmit={handleFormSubmit} className="zones-form">
-            <label>
-              Zone Name *
-              <input name="name" placeholder="Enter zone name" required />
-            </label>
-
-            <label>
-              Assigned Admin *
-              <input
-                name="admin"
-                placeholder="Enter administrator name"
-                required
-              />
-            </label>
-
-            <label>
-              Location *
-              <input name="location" placeholder="Enter location" required />
-            </label>
-
-            <label>
-              Pincode *
-              <input
-                name="pincode"
-                placeholder="6-digit pincode"
-                pattern="[0-9]{6}"
-                maxLength={6}
-                required
-              />
-            </label>
-
-            <label className="zones-form-full">
-              Description
-              <textarea
-                name="description"
-                placeholder="Enter zone description"
-                rows={3}
-              />
-            </label>
-
-            <div className="zones-form-actions">
-              <button
-                type="button"
-                className="zones-cancel-button"
-                onClick={() => {
-                  setShowForm(false);
-                  setFormMessage("");
-                }}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="zones-submit-button">
-                Validate Details
-              </button>
-            </div>
-          </form>
-
-          {formMessage && (
-            <p className="zones-form-message" role="status">
-              {formMessage}
-            </p>
-          )}
-        </section>
-      )}
-
       <section className="zones-table-panel">
         <div className="zones-table-heading">
           <div>
@@ -322,6 +263,114 @@ export default function ZonesPage() {
         Showing illustrative sample data. Live zone records will be loaded
         through the ASP.NET Core API after backend integration.
       </p>
+
+      {/* Add Zone Modal */}
+      {showForm && (
+        <div
+          className="zones-modal-overlay"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closeForm();
+            }
+          }}
+        >
+          <section
+            className="zones-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="zones-modal-title"
+          >
+            <div className="zones-form-heading">
+              <div>
+                <h2 id="zones-modal-title">Add New Zone</h2>
+                <p>
+                  Enter the basic information for the new operational zone.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="zones-close-button"
+                onClick={closeForm}
+                aria-label="Close form"
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleFormSubmit} className="zones-form">
+              <label>
+                Zone Name *
+                <input
+                  name="name"
+                  placeholder="Enter zone name"
+                  required
+                  autoFocus
+                />
+              </label>
+
+              <label>
+                Assigned Admin *
+                <input
+                  name="admin"
+                  placeholder="Enter administrator name"
+                  required
+                />
+              </label>
+
+              <label>
+                Location *
+                <input
+                  name="location"
+                  placeholder="Enter location"
+                  required
+                />
+              </label>
+
+              <label>
+                Pincode *
+                <input
+                  name="pincode"
+                  placeholder="6-digit pincode"
+                  pattern="[0-9]{6}"
+                  maxLength={6}
+                  inputMode="numeric"
+                  required
+                />
+              </label>
+
+              <label className="zones-form-full">
+                Description
+                <textarea
+                  name="description"
+                  placeholder="Enter zone description"
+                  rows={3}
+                />
+              </label>
+
+              <div className="zones-form-actions">
+                <button
+                  type="button"
+                  className="zones-cancel-button"
+                  onClick={closeForm}
+                >
+                  Cancel
+                </button>
+
+                <button type="submit" className="zones-submit-button">
+                  Validate Details
+                </button>
+              </div>
+            </form>
+
+            {formMessage && (
+              <p className="zones-form-message" role="status">
+                {formMessage}
+              </p>
+            )}
+          </section>
+        </div>
+      )}
     </main>
   );
 }
